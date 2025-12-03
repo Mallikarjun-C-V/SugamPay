@@ -423,7 +423,7 @@ const PaymentPage = () => {
     if (orderId) {
       const backendUrl = import.meta.env.VITE_BACKEND_URL;
       axios
-        .get(`${backendUrl}/api/pay`)
+        get(`${backendUrl}/api/get-order/${orderId}`)
         .then((res) => {
           setAmount(res.data.amount);
           setSource(res.data.sourceApp);
