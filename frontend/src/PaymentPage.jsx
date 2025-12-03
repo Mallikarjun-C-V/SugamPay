@@ -421,8 +421,9 @@ const PaymentPage = () => {
 
   useEffect(() => {
     if (orderId) {
+      const backendUrl = import.meta.env.VITE_BACKEND_URL;
       axios
-        .get(`http://localhost:5000/api/get-order/${orderId}`)
+        .get(`${backendUrl}/api/pay`)
         .then((res) => {
           setAmount(res.data.amount);
           setSource(res.data.sourceApp);
@@ -612,7 +613,8 @@ const PaymentPage = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post('http://localhost:5000/api/pay', {
+      const backendUrl = import.meta.env.VITE_BACKEND_URL;
+      const response = await axios.post(`${backendUrl}/api/pay`, {
         orderId: orderId,
         cardHolderName: formData.name,
         cardNumber: formData.cardNumber.replace(/\s/g, ''),

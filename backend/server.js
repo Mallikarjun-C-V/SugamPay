@@ -6,10 +6,15 @@ const paymentRoutes = require('./routes/paymentRoutes');
 
 const app = express();
 
-// Middleware
-app.use(cors()); // Allow requests from other websites
-app.use(express.json()); // Parse incoming JSON data
+// 1. UPDATED CORS (Works for local + Vercel)
+app.use(cors({
+    origin: '*',
+    credentials: true
+}));
 
+app.use(express.json());
+
+// Routes
 app.use('/api', paymentRoutes);
 
 // Database Connection
@@ -19,21 +24,24 @@ const connectDB = async () => {
         console.log(`MongoDB Connected: ${conn.connection.host}`);
     } catch (error) {
         console.error(`Error: ${error.message}`);
-        process.exit(1); // Stop app if DB fails
+        process.exit(1);
     }
 };
 
-// Simple Route to check if server is working
+// Simple Route
 app.get('/', (req, res) => {
     res.send('SugamPay Server is Running...');
 });
 
-// Start Server
-const PORT = process.env.PORT || 5000;
-
-// Connect to DB first, then start server
-connectDB().then(() => {
-    app.listen(PORT, () => {
-        console.log(`Server running on port ${PORT}`);
+// 2. WRAP APP.LISTEN (Works locally, but Vercel won’t freeze)
+if (require.main === module) {
+    const PORT = process.env.PORT || 5000;
+    connectDB().then(() => {
+        app.listen(PORT, () => {
+            console.log(`Server running on port ${PORT}`);
+        });
     });
-});
+}
+
+// 3. EXPORT THE APP (CRUCIAL for Vercel)
+module.exports = app;
