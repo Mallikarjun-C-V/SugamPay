@@ -1,4 +1,4 @@
-import rupayLogo from "./rupay.png";
+import rupayLogo from "./RuPay.png";
 
 export const assets = {
     rupayLogo
